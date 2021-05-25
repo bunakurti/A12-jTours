@@ -1,6 +1,32 @@
 const fs = require('fs')
+
 // e kem lexu filen i cili i permban te gjitha tours
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
+
+exports.checkId = (req, res, next,val)=>{
+    console.log(`tour id: ${val}`)
+
+    
+    if(req.params.id*1> tours.length){
+        return res.json({
+            status:"fail",
+            message:"invalid ID"
+        })
+    }
+    next()
+}
+
+exports.checkBody = (req,res,next )=>{
+
+    if(!req.body.name || !req.body.price ){
+        return res.json({
+            status:"fail",
+            message:"missing name or price"
+        })
+    }
+
+    next()
+}
 
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
@@ -38,14 +64,6 @@ exports.getTour = (req, res) => {
     const id = req.params.id * 1
     const tour = tours.find(el => el.id === id)
 
-    if (!tour) {
-        return res.json({
-            status: "fail",
-            message: "Invaild ID"
-
-        })
-    }
-
     res.json({
         status: "success",
         data: {
@@ -57,14 +75,7 @@ exports.getTour = (req, res) => {
 
 exports.updateTour = (req, res) => {
 
-    const id = req.params.id
-    if (id > tours.length) {
-        return res.json({
-            status: "fail",
-            messages: "Invalid ID"
-        })
-    }
-
+    
     res.json({
         status: "success",
         data: {
@@ -76,13 +87,6 @@ exports.updateTour = (req, res) => {
 
 exports.deleteTour = (req, res) => {
 
-    const id = req.params.id
-    if (id > tours.length) {
-        return res.json({
-            status: "fail",
-            messages: "Invalid ID"
-        })
-    }
 
     res.json({
         status: "succsess",

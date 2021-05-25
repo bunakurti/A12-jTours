@@ -3,11 +3,14 @@ const tourController = require('./../controllers/tourController')
 
 const router = express.Router()
 
+//val=id qe e marrim nga objekti ne file
+router.param('id', tourController.checkId)
+
 
 router
     .route('/')
     .get(tourController.getAllTours)
-    .post(tourController.createTour)
+    .post(tourController.checkBody,tourController.createTour)
 
 
 router
