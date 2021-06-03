@@ -1,75 +1,81 @@
-const fs = require('fs')
+const tour = require('./../models/tourModel')
+
+// const fs = require('fs')
 
 // e kem lexu filen i cili i permban te gjitha tours
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
-exports.checkId = (req, res, next,val)=>{
-    console.log(`tour id: ${val}`)
+// exports.checkId = (req, res, next,val)=>{
+//     console.log(`tour id: ${val}`)
 
     
-    if(req.params.id*1> tours.length){
-        return res.json({
-            status:"fail",
-            message:"invalid ID"
-        })
-    }
-    next()
-}
+//     if(req.params.id*1> tours.length){
+//         return res.json({
+//             status:"fail",
+//             message:"invalid ID"
+//         })
+//     }
+//     next()
+// }
 
-exports.checkBody = (req,res,next )=>{
+// exports.checkBody = (req,res,next )=>{
 
-    if(!req.body.name || !req.body.price ){
-        return res.json({
-            status:"fail",
-            message:"missing name or price"
-        })
-    }
+//     if(!req.body.name || !req.body.price ){
+//         return res.json({
+//             status:"fail",
+//             message:"missing name or price"
+//         })
+//     }
 
-    next()
-}
+//     next()
+// }
 
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
 
     res.json({
         status: "success",
-        requested: req.requestTime,
-        data: { tours }
+        // requested: req.requestTime,
+        // data: { tours }
     })
 }
 
-exports.createTour = (req, res) => {
-    // console.log(req.body)
+exports.createTour = async (req, res) => {
+    //opcion 1
+    //const newTour = new Tour({})
+    //newTour.save()
 
-    // ka me u shtu nje dokument i ri
-    const newId = tours[tours.length - 1].id + 1
-    const newTour = Object.assign({ id: newId }, req.body)
-
-    tours.push(newTour)
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    try{
+        const newTour = await tour.create(req.body)
         res.json({
             status: "success",
-            data: {
+            data:{
                 tour: newTour
             }
         })
-
-    })
+    }
+    catch(err){
+        res.json({
+            status:"fail",
+            message: err
+        })
+    }
 }
+  
 
 exports.getTour = (req, res) => {
     console.log(req.params)
 
-    // po e marrim id-n dhe po e konvertojm ne string
-    const id = req.params.id * 1
-    const tour = tours.find(el => el.id === id)
+    // // po e marrim id-n dhe po e konvertojm ne string
+    // const id = req.params.id * 1
+    // const tour = tours.find(el => el.id === id)
 
-    res.json({
-        status: "success",
-        data: {
-            tour
-        }
-    })
+    // res.json({
+    //     status: "success",
+    //     data: {
+    //         tour
+    //     }
+    // })
 
 }
 
