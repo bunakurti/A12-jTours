@@ -7,11 +7,11 @@ const tourSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
-    duration:{
+    duration: {
         type: Number,
         requried: [true, "A tour must have a duration"]
     },
-    maxGroupSize:{
+    maxGroupSize: {
         type: Number,
         requried: [true, "A tour must have a group size"]
 
@@ -35,11 +35,11 @@ const tourSchema = new mongoose.Schema({
     },
     priceDiscount: Number,
 
-    summary:{
+    summary: {
         type: String,
-        requried: [true, "A tour must have a description"] ,  
-             trim: true
-     },
+        requried: [true, "A tour must have a description"],
+        trim: true
+    },
     description: {
         type: String,
         trim: true
@@ -47,14 +47,14 @@ const tourSchema = new mongoose.Schema({
     imageCover: {
         type: String,
         requried: [true, "A tour must have a cover image"]
-    }, 
-    images:[String],
-
-    createdAt:{
-        type: Date,
-        default: Data.now()
     },
-    staredDate:[Date]
+    images: [String],
+
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    staredDate: [Date]
 })
 
 //tabela
