@@ -34,7 +34,20 @@ exports.getAllTours = async (req, res) => {
 
     try {
 
-        const tours = await Tour.find()
+        const queryObj = { ...req.query } //new object
+        const excludedFields = ['page', 'sort', 'limit', 'fields'] //fushat qe nuk dojm me i perfshi ne filtrim
+        excludedFields.forEach(el => delete queryObj[el])
+
+        //convert query to string
+        let queryStr = JSON.stringify(queryObj)//e bojm string objektin
+        queryStr = queryStr.replace(/\b(gte|gt|lte|it)\b/g, match => `$${match}`)
+        console.log(JSON.parse(queryStr))
+
+        console.log("req.query", req.query, "req.queryObj", queryObj)
+
+        const query = Tour.find(JSON.parse(queryStr))
+
+        const tours = await query
 
         res.json({
             status: "success",
@@ -77,18 +90,18 @@ exports.createTour = async (req, res) => {
 exports.getTour = async (req, res) => {
     console.log(req.params)
 
-    try{
+    try {
 
         const tour = await Tour.findById(req.params.id)
 
         res.json({
-        status: "success",
-        data: {tour}
-    })
+            status: "success",
+            data: { tour }
+        })
 
     }
 
-    catch(err){
+    catch (err) {
         res.json({
             status: "fail",
             message: err
@@ -109,11 +122,11 @@ exports.getTour = async (req, res) => {
 
 exports.updateTour = async (req, res) => {
 
-    try{
-        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body,{
-            new:true,
-            runValidators: true 
-        } )
+    try {
+        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
         res.json({
             status: "success",
             data: {
@@ -122,27 +135,27 @@ exports.updateTour = async (req, res) => {
         })
     }
 
-    catch(err){
+    catch (err) {
         res.json({
             status: "fail",
             message: err
         })
     }
-  
+
 
 }
 
-exports.deleteTour =async (req, res) => {
+exports.deleteTour = async (req, res) => {
 
-    try{
+    try {
         const tour = await Tour.findByIdAndDelete(req.params.id)
-       res.json({
-        status: "succsess",
-        data: null
-    })
-}
+        res.json({
+            status: "succsess",
+            data: null
+        })
+    }
 
-    catch(err){
+    catch (err) {
         res.json({
             status: "fail",
             message: err
